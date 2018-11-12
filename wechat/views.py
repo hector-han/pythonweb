@@ -50,7 +50,7 @@ def wechat_main(request):
         # 这里是根据公众号中收到的消息（/关键词）去返回相关的资源信息，使用文本消息接口
         print('收到消息={}'.format(request.body))
         str_xml = etree.fromstring(request.body)
-        msg_type = str_xml.find('MagType').text
+        msg_type = str_xml.find('MsgType').text
         if msg_type == 'text':
             fromUser = str_xml.find('ToUserName').text
             toUser = str_xml.find('FromUserName').text
