@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['39.105.214.252', '127.0.0.1']
 
 INSTALLED_APPS = [
     'demo.apps.DemoConfig',
+    'wechat.apps.WechatConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
