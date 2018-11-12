@@ -7,6 +7,9 @@ import hashlib
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from pythonweb.settings import conf
+from lxml import etree
+import time
+from django.shortcuts import get_object_or_404, render
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -42,9 +45,24 @@ def wechat_main(request):
         if hashstr == signature:
             return HttpResponse(echostr)
         else:
-            return HttpResponse("field")
+            return HttpResponse("")
     else:
-        return HttpResponse("not support")
+        # 这里是根据公众号中收到的消息（/关键词）去返回相关的资源信息，使用文本消息接口
+        print('收到消息={}'.format(request.body))
+        str_xml = etree.fromstring(request.body)
+        msg_type = str_xml.find('MagType').text
+        if msg_type == 'text':
+            fromUser = str_xml.find('ToUserName').text
+            toUser = str_xml.find('FromUserName').text
+            content = str_xml.find('Content').text
+            nowtime = str(int(time.time()))
+
+            # 用模板构建返回给微信的数据
+            c = {'toUser': toUser, 'fromUser': fromUser, 'nowtime': nowtime, 'content': content}
+            return render(request, 'wechat/text.xml', c)
+        else:
+            print("暂不处理")
+            return HttpResponse("success")
 
 
 def autoreply(request):
