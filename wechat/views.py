@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from .serializers import UserSerializer, GroupSerializer
@@ -10,6 +8,7 @@ from pythonweb.settings import conf
 from lxml import etree
 import time
 from django.shortcuts import get_object_or_404, render
+from wechat.utils import baiduai
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -51,21 +50,24 @@ def wechat_main(request):
         print('收到消息={}'.format(request.body))
         str_xml = etree.fromstring(request.body)
         msg_type = str_xml.find('MsgType').text
+        nowtime = str(int(time.time()))
         if msg_type == 'text':
             fromUser = str_xml.find('ToUserName').text
             toUser = str_xml.find('FromUserName').text
             content = str_xml.find('Content').text
-            nowtime = str(int(time.time()))
-
             # 用模板构建返回给微信的数据
             c = {'toUser': toUser, 'fromUser': fromUser, 'nowtime': nowtime, 'content': content}
             return render(request, 'wechat/text.xml', c)
-        elif msg_type == '':
+        elif msg_type == 'image':
             fromUser = str_xml.find('ToUserName').text
             toUser = str_xml.find('FromUserName').text
             pic_url = str_xml.find('picUrl').text
             print("pic_url={}".format(pic_url))
-            print("暂不处理")
+            content = baiduai.ocr(pic_url)
+            print("pic_url={}".format(pic_url))
+            c = {'toUser': toUser, 'fromUser': fromUser, 'nowtime': nowtime, 'content': content}
+            return render(request, 'wechat/text.xml', c)
+        else:
             return HttpResponse("success")
 
 
