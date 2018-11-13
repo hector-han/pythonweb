@@ -61,7 +61,7 @@ def wechat_main(request):
         elif msg_type == 'image':
             fromUser = str_xml.find('ToUserName').text
             toUser = str_xml.find('FromUserName').text
-            pic_url = str_xml.find('picUrl').text
+            pic_url = str_xml.find('PicUrl').text
             print("pic_url={}".format(pic_url))
             content = baiduai.ocr(pic_url)
             print("pic_url={}".format(pic_url))
