@@ -60,7 +60,11 @@ def wechat_main(request):
             # 用模板构建返回给微信的数据
             c = {'toUser': toUser, 'fromUser': fromUser, 'nowtime': nowtime, 'content': content}
             return render(request, 'wechat/text.xml', c)
-        else:
+        elif msg_type == '':
+            fromUser = str_xml.find('ToUserName').text
+            toUser = str_xml.find('FromUserName').text
+            pic_url = str_xml.find('picUrl').text
+            print("pic_url={}".format(pic_url))
             print("暂不处理")
             return HttpResponse("success")
 
