@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>enjoy it</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<script type = "text/javascript" 
+    src = "https://www.tutorialspoint.com/jquery/jquery-3.6.0.js">
+</script>
+</head>
+
+<body>
+<p>地址解析</p>
+地址: 
+<input type="text" id="input_address" style="width:50%" placeholder="请输入一行地址...">
+<button onclick="invoke_geo()">提交</button>
+<p id="geo_result"></p>
+
+
+<script>
+function invoke_geo() {
+    var x = document.getElementById("input_address").value;
+    $.post("/geocoding", {"address": x}, 
+        function(result){
+            document.getElementById("geo_result").innerHTML = result;
+        }
+    )
+    
+}
+</script>
+
+
+</body>
+
+
+
+</html>
